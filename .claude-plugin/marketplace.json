@@ -1,0 +1,18 @@
+{
+  "name": "azama-skills",
+  "owner": {
+    "name": "Azama"
+  },
+  "description": "System Analyst tooling skills: documentation, PRD, and analysis workflows.",
+  "plugins": [
+    {
+      "name": "codebase-doc-generator",
+      "source": "./",
+      "description": "Thoroughly scan a codebase -> per-page feature documentation + user stories (epic per module, AC always included) + main and sub system flows as vertical swimlanes, packaged into a single .docx. Multi-stack, with an anti-assumption discipline.",
+      "author": { "name": "Azama" },
+      "license": "MIT",
+      "category": "documentation",
+      "keywords": ["documentation", "codebase", "user-story", "swimlane", "docx", "reverse-engineering", "brownfield"]
+    }
+  ]
+}

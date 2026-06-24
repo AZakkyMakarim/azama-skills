@@ -1,0 +1,7 @@
+{
+  "name": "codebase-doc-generator",
+  "description": "Scan codebase -> per-page feature docs + user stories + swimlane flows -> .docx. Multi-stack, anti-assumption.",
+  "version": "1.0.0",
+  "author": { "name": "Azama" },
+  "license": "MIT"
+}
