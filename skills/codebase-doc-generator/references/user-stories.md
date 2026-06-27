@@ -61,13 +61,18 @@ AC that must be confirmed (examples):
 
 Mandatory at the system level. Guarantees the "covers all features" claim is auditable.
 
+In the **final document**, the Status column reflects a resolved state (e.g. ✅ Documented). The `❓`
+draft state below is internal only and must be gone before export.
+
 | Module (Epic) | Page/Feature | Story | Status |
 |---------------|--------------|-------|--------|
-| Reservation | Create Reservation | RSV.1 | ✅ |
-| Reservation | Cancel Reservation | RSV.2 | ⚠️ benefit needs confirmation |
+| Reservation | Create Reservation | RSV.1 | ✅ Documented |
+| Reservation | Cancel Reservation | RSV.2 | ✅ Documented |
 
 - Every scanned page MUST appear at least once in this table.
-- A page with no story → add a row with Status "❌ no story yet" so gaps are visible.
+- During the draft only, a page with no story → temporarily mark Status "❓ no story yet" so it surfaces as
+  a gap to raise in the Phase 4 interview. By build time every such row is resolved (or, if the user
+  explicitly deferred it, rewritten as a clean Appendix "Open Items" note) — no `❓`/`⚠️` reaches the doc.
 
 ---
 

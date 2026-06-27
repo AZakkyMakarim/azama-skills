@@ -73,8 +73,22 @@ The document structure follows `references/doc-template.md`:
 Part I (system) → Part II (per page). Use `HeadingLevel.HEADING_1..3` for headings.
 Tables (input, page map, story mapping) use `Table`/`TableRow`/`TableCell`.
 
-Mark `⚠️ NEEDS CONFIRMATION` with a highlighted `TextRun` (e.g. `highlight: 'yellow'`) so the user can
-find them easily during review.
+**Pre-export guard (MANDATORY).** Before assembling the `Document`, verify the content is clean. The
+final `.docx` must contain **zero** confirmation markers or placeholders. Scan all the assembled text for
+any of: `⚠️`, `NEEDS CONFIRMATION`, `❓`, `TBD`, `TODO`, `<...>` placeholders. If ANY are found, **stop —
+do not export.** Go back to the gap interview, get the answer, and only then build. Example check:
+
+```js
+const FORBIDDEN = [/⚠️/, /NEEDS CONFIRMATION/i, /❓/, /\bTBD\b/, /\bTODO\b/, /<[^>]+>/];
+function assertClean(text) {
+  const hit = FORBIDDEN.find(re => re.test(text));
+  if (hit) throw new Error(`Gate not cleared: found ${hit} in content. Ask the user before generating.`);
+}
+// run assertClean() over every paragraph/cell string before constructing the Document
+```
+
+Items the user *explicitly* chose to defer are written as clean prose in the Appendix "Open Items"
+list (e.g. "To be confirmed with product owner: refund window length.") — never as the raw `⚠️` marker.
 
 ```js
 const doc = new Document({

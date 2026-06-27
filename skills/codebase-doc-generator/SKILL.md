@@ -47,8 +47,44 @@ The generated document's language follows the **user's preference**, not a fixed
 2. **Traceable.** Tag each fact with a `path/file.ext:line` reference where possible.
 3. **Flows are not automatic.** UX ordering across pages, alternative branches, error handling, and the
    *why* behind conditionals are often NOT readable from code. These must be asked, not invented.
-4. **Scan first, ask later.** Don't ask page-by-page. Scan thoroughly → draft → batch all gap questions
-   at the end.
+4. **Scan first, ask later.** Don't ask page-by-page. Scan thoroughly → draft internally → batch all gap
+   questions at the end.
+5. **Confirm before generating.** Never build the final document while open confirmations remain. See the
+   gate below — this is non-negotiable.
+6. **Explain in prose.** The output document is narrative documentation, not a pile of bullet fragments.
+   See the writing-style rules below.
+
+---
+
+## ⛔ Mandatory Confirmation Gate (DO NOT SKIP)
+
+The `.docx` is generated **only after every open `⚠️ NEEDS CONFIRMATION` item is resolved.** Producing a
+document that still contains unconfirmed guesses wastes the user's time, because they receive a document
+they then have to correct. Therefore:
+
+- If anything is incomplete, ambiguous, or requires interpretation, **ASK THE USER FIRST. Do NOT generate
+  the document yet.**
+- Hold ALL questions until after the scan, then ask them together in one batch (Phase 4).
+- Proceed to build (Phase 5) **only** once the user has answered — or has explicitly chosen to defer
+  specific items. Only those explicitly deferred items may appear as "open per user" in the document.
+- If the user's answers reveal new gaps, ask again before building. Loop until nothing is unresolved.
+- The default action when uncertain is **to ask, never to generate.**
+- **The final `.docx` must contain ZERO `⚠️ NEEDS CONFIRMATION` markers** (and no `❓`, `TBD`, `TODO`, or
+  `<placeholder>` text). These markers are strictly internal — they live only in the working draft and the
+  interview, never in the deliverable.
+- Items the user *explicitly* defers are NOT left as raw markers. Write them as clean prose in the
+  Appendix "Open Items" list (e.g. "To be confirmed with the product owner: refund window length.").
+- Before exporting, run a final check over the whole assembled document for any leftover marker strings.
+  If any are found, the gate is NOT cleared — return to the interview instead of generating.
+
+## Writing Style of the Output Document
+
+- Explain each feature in **full paragraphs (narrative prose)** — not terse one-line bullets. The reader
+  should be able to follow how the feature works as a continuous explanation.
+- Reserve tables for structured field data (the Input table) and numbered lists only for discrete
+  business rules. Everything else (Overview, Output, How It Works, flow narratives) is written as prose.
+- Aim for completeness: a stakeholder who never saw the code should understand each feature end to end
+  from the paragraphs alone.
 
 ---
 
@@ -77,22 +113,30 @@ Map ALL pages/routes, then pull facts from code for each page:
 - Store each fact with a `file:line` reference.
 - What is knowable vs not per stack → see `references/stack-detection.md`.
 
-### Phase 3 — DRAFT + FLAG GAPS
-Draft the documentation using the template in `references/doc-template.md`.
+### Phase 3 — DRAFT + FLAG GAPS (internal, not shown as the final doc yet)
+Draft the documentation internally using the template in `references/doc-template.md`. This draft is a
+working artifact to locate gaps — it is NOT the deliverable and is NOT exported yet.
 - Fill what can be filled from code facts.
 - Whenever interpretation is needed (business intent, flow ordering, alternatives, *why*, role persona,
   user-story benefit, business-level AC) → write `⚠️ NEEDS CONFIRMATION: <specific question>`.
 - Collect ALL `⚠️` markers into a single gap list.
 
-### Phase 4 — GAP INTERVIEW (batched)
+### Phase 4 — GAP INTERVIEW (MANDATORY, blocking)
+This phase is a **hard stop**. Do not generate the document until it is cleared.
 - Present all gap questions at once, grouped: **Flow**, **Business rules**, **Role/persona**,
   **User story (benefit & AC)**.
 - Prioritize flow questions — those are least readable from code.
 - Use closed/multiple-choice questions where possible for easy answering.
-- Do NOT render swimlanes & build the docx before the main-flow gaps are answered. Unanswered minor gaps
-  may stay in the document as "open" in the Appendix.
+- **Wait for the user's answers.** Do NOT render swimlanes or build the docx while any confirmation is
+  unresolved.
+- If the answers reveal new gaps, ask again and keep looping until nothing is unresolved.
+- Only items the user *explicitly* tells you to leave open may be deferred; record those as clean prose in
+  the Appendix "Open Items" list — never as the raw `⚠️` marker. Never silently ship an unconfirmed inference.
 
 ### Phase 5 — RENDER + BUILD
+Run this phase **only after the confirmation gate (Phase 4) is fully cleared.**
+- **First, verify the draft is clean:** scan the entire assembled content for `⚠️`, `NEEDS CONFIRMATION`,
+  `❓`, `TBD`, `TODO`, or `<placeholder>` strings. If any remain, STOP and return to Phase 4 — do not build.
 - Generate a vertical swimlane per flow → SVG → PNG. Visual conventions & rules → `references/swimlane-svg.md`.
 - Build user stories (epic per module, story per action, AC always) → `references/user-stories.md`.
 - Assemble everything into a single `.docx` with PNG swimlanes embedded → pipeline in `references/docx-build.md`.
@@ -108,7 +152,7 @@ Draft the documentation using the template in `references/doc-template.md`.
 3. **Main System Flow** — end-to-end vertical swimlane
 4. Sub-flows — small flows per key feature (each a swimlane when needed)
 5. User Story List (all features) + feature → story mapping table
-6. Appendix: list of unanswered "⚠️ NEEDS CONFIRMATION" items + decision log
+6. Appendix: any items the user explicitly chose to defer (should normally be empty) + decision log
 
 **Per-page level (main body):**
 Full template (description, input, output, how it works, flow, business rules, user story, dependencies)
@@ -120,7 +164,8 @@ in `references/doc-template.md`.
 
 - Every scanned page MUST have a documentation entry.
 - Every feature MUST have at least one user story in the mapping table.
-- If a page is scanned but has no story / no flow yet → list it in the Appendix as an open item, never hide it.
+- If a page is scanned but has no clear story or flow, that is a gap → raise it in the Phase 4 interview
+  and resolve it with the user. Do not ship it unresolved unless the user explicitly defers it.
 
 ---
 
