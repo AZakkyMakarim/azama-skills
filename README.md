@@ -30,10 +30,10 @@ and ask about gaps (especially flows) before finalizing.
 
 ### A. Claude Code (via marketplace)
 ```bash
-/plugin marketplace add azama/azama-skills
+/plugin marketplace add AZakkyMakarim/azama-skills
 /plugin install codebase-doc-generator@azama-skills
 ```
-> Replace `azama/azama-skills` with your actual GitHub `owner/repo`.
+> Replace `AZakkyMakarim/azama-skills` with your actual GitHub `owner/repo`.
 > Update: `/plugin marketplace update azama-skills`
 
 ### B. Other tools (grab the skill folder)
